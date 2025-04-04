@@ -1,0 +1,23 @@
+.matchmaking-bg {
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    min-height: 100vh;
+  }
+  
+  .match-card {
+    border-radius: 20px;
+    transition: transform 0.3s ease;
+    background-color: #fff;
+  }
+  
+  .match-card:hover {
+    transform: scale(1.03);
+  }
+  
+  .profile-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #0d6efd;
+  }
+  
