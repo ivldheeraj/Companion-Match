@@ -66,7 +66,6 @@ const ViewEvents = () => {
   return (
     <div className="container mt-4">
       {/* ---------------- Upcoming Events ---------------- */}
-      {/* <h2 className="mb-3">Upcoming Events</h2> */}
       {upcomingEvents.length === 0 ? (
         <p>No upcoming events.</p>
       ) : (
@@ -103,9 +102,8 @@ const ViewEvents = () => {
           ))}
         </div>
       )}
-
       {/* ---------------- Past Events ---------------- */}
-      <h2 className="text-center display-6 mt-4">Past Events</h2>
+      <h2 className="text-center display-6 mt-4 ">Past Events</h2>
       {pastEvents.length === 0 ? (
         <p>No past events.</p>
       ) : (
