@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Link, useNavigate } from "react-router-dom";
 import LoginImage from "../Assets/Login.png"; // Ensure the correct path
 import "./../Assets/Login.css";
+import axios from "axios";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -16,15 +17,33 @@ const Login = () => {
     }
   }, [navigate]);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    localStorage.setItem("userEmail", email);
-    localStorage.setItem(
-      "isAdmin",
-      email === "Admin" ? "true" : "false"
-    );
-    navigate("/");
+  
+    try {
+      const response = await axios.post("http://127.0.0.1:5000/login", {
+        email,
+        password,
+      });
+  
+      if (response.status === 200 && response.data) {
+        const { user_id, user_type } = response.data;
+  
+        localStorage.setItem("userEmail", email);
+        localStorage.setItem("userId", user_id);
+        localStorage.setItem("userType", user_type); // Store user type
+        localStorage.setItem("isAdmin", user_type === "admin" ? "true" : "false");
+  
+        navigate("/"); // Redirect to home
+      } else {
+        alert("Invalid credentials or server error.");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Login failed. Please check your credentials or try again later.");
+    }
   };
+  
 
   return (
     <div className="container vh-100 d-flex align-items-center justify-content-center">

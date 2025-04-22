@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AddEventForm from "./AddEventForm";
 import AdminDashboard from "./AdminAddEvent";
 
 const AdminPage = () => {
@@ -8,7 +7,9 @@ const AdminPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const adminStatus = localStorage.getItem("isAdmin") === "true";
+    const userType = localStorage.getItem("userType");
+    const adminStatus = userType === "admin";
+
     setIsAdmin(adminStatus);
 
     if (!adminStatus) {
@@ -19,7 +20,6 @@ const AdminPage = () => {
   return (
     <div>
       <h2 className="text-center mt-4">Admin Dashboard</h2>
-      {/* {isAdmin ? <AddEventForm isAdmin={true} /> : <p className="text-danger text-center">Access Denied</p>} */}
       {isAdmin ? <AdminDashboard isAdmin={true} /> : <p className="text-danger text-center">Access Denied</p>}
 
     </div>

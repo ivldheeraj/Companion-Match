@@ -1,72 +1,110 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import AddEventForm from "./AddEventForm";
 import ViewEvents from "./ViewEvents";
 import AdminDashboard from "./AdminAddEvent";
-import DashImage from "../Assets/dash.png"; // Ensure the correct path
+import DashImage from "../Assets/dash.png"; // Ensure correct path
+
+const INACTIVITY_TIMEOUT = 15 * 60 * 1000; // 15 minutes in milliseconds
 
 const Home = () => {
   const [userEmail, setUserEmail] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
 
+  const handleLogout = useCallback(() => {
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userType");
+    navigate("/login");
+  }, [navigate]);
+
+  // Set user info on load
   useEffect(() => {
     const email = localStorage.getItem("userEmail");
-    const adminStatus = localStorage.getItem("isAdmin") === "true";
+    const userType = localStorage.getItem("userType");
 
     if (!email) {
-      navigate("/login"); // Redirect if not logged in
+      navigate("/login");
     } else {
       setUserEmail(email);
-      setIsAdmin(adminStatus);
+      setIsAdmin(userType === "admin");
     }
   }, [navigate]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("userEmail");
-    localStorage.removeItem("isAdmin");
-    navigate("/login"); // Redirect to login page
-  };
+  // Inactivity timer logic
+  useEffect(() => {
+    let timer;
+
+    const resetTimer = () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        alert("You have been logged out due to inactivity.");
+        handleLogout();
+      }, INACTIVITY_TIMEOUT);
+    };
+
+    const activityEvents = ["mousemove", "keydown", "mousedown", "scroll", "touchstart"];
+
+    activityEvents.forEach(event =>
+      window.addEventListener(event, resetTimer)
+    );
+
+    resetTimer(); // Start timer on load
+
+    return () => {
+      clearTimeout(timer);
+      activityEvents.forEach(event =>
+        window.removeEventListener(event, resetTimer)
+      );
+    };
+  }, [handleLogout]);
 
   return (
     <div className="container mt-4 position-relative">
+      {/* Logout Button */}
       <div className="d-flex justify-content-end mt-3">
-        <button
-          className="btn btn-danger me-3"
-          onClick={handleLogout}
-        >
+        <button className="btn btn-danger me-3" onClick={handleLogout}>
           Logout
         </button>
       </div>
+
+      {/* Welcome Section */}
       <div className="row align-items-center mt-5">
         <div className="col-md-6">
-          <h1 className="fw-bold display-3">
-            Hello {userEmail}! <br />
-          </h1>
-          <h2 className="display-5">  Welcome to the Companion Match - Event Based Platform</h2>
-          <p>Manage all your events efficiently</p>
+        <h1 className="fw-bold display-4">
+  Hello {userEmail.charAt(0).toUpperCase() + userEmail.split("@")[0].slice(1)}!
+</h1>        <h2 className="display-6">
+            {/* Welcome to the Companion Match Platform */}
+          </h2>
+          <p className="lead">
+            {isAdmin
+              ? "You're logged in as an Admin. Manage events with full control."
+              : "You're logged in as a Student. View and attend amazing events!"}
+          </p>
         </div>
-
         <div className="col-md-6 text-center">
           <img src={DashImage} alt="Event" className="img-fluid rounded" />
         </div>
       </div>
 
-      {/* If Admin, show Admin Dashboard */}
+      {/* Admin vs Student Content */}
       {isAdmin ? (
-        <AdminDashboard userEmail={userEmail} />
+        <>
+          {/* <h3 className="text-center mt-4 mb-3">Admin Event Management</h3> */}
+          <AdminDashboard userEmail={userEmail} />
+        </>
       ) : (
         <>
-          <h2 className="text-center display-6 mt-4">Upcoming Events</h2>
+        <br/>
+          <h3 className="text-center display-4">Welcome to Companion Match</h3>
+          <br/>
           <ViewEvents />
         </>
       )}
 
       {/* Footer */}
       <footer className="bg-dark text-white text-center p-4 mt-5">
-        <p className="mb-0">
-          © {new Date().getFullYear()} Find Your Companion App. All Rights
-          Reserved.
+        <p className="mb-1">
+          © {new Date().getFullYear()} Find Your Companion App. All Rights Reserved.
         </p>
         <p className="mb-0">Made with ❤️ by Team 3</p>
       </footer>
