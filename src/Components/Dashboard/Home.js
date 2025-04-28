@@ -42,9 +42,15 @@ const Home = () => {
       }, INACTIVITY_TIMEOUT);
     };
 
-    const activityEvents = ["mousemove", "keydown", "mousedown", "scroll", "touchstart"];
+    const activityEvents = [
+      "mousemove",
+      "keydown",
+      "mousedown",
+      "scroll",
+      "touchstart",
+    ];
 
-    activityEvents.forEach(event =>
+    activityEvents.forEach((event) =>
       window.addEventListener(event, resetTimer)
     );
 
@@ -52,7 +58,7 @@ const Home = () => {
 
     return () => {
       clearTimeout(timer);
-      activityEvents.forEach(event =>
+      activityEvents.forEach((event) =>
         window.removeEventListener(event, resetTimer)
       );
     };
@@ -70,9 +76,13 @@ const Home = () => {
       {/* Welcome Section */}
       <div className="row align-items-center mt-5">
         <div className="col-md-6">
-        <h1 className="fw-bold display-4">
-  Hello {userEmail.charAt(0).toUpperCase() + userEmail.split("@")[0].slice(1)}!
-</h1>        <h2 className="display-6">
+          <h1 className="fw-bold display-4">
+            Hello{" "}
+            {userEmail.charAt(0).toUpperCase() +
+              userEmail.split("@")[0].slice(1)}
+            !
+          </h1>{" "}
+          <h2 className="display-6">
             {/* Welcome to the Companion Match Platform */}
           </h2>
           <p className="lead">
@@ -89,14 +99,13 @@ const Home = () => {
       {/* Admin vs Student Content */}
       {isAdmin ? (
         <>
-          {/* <h3 className="text-center mt-4 mb-3">Admin Event Management</h3> */}
           <AdminDashboard userEmail={userEmail} />
         </>
       ) : (
         <>
-        <br/>
+          <br />
           <h3 className="text-center display-4">Welcome to Companion Match</h3>
-          <br/>
+          <br />
           <ViewEvents />
         </>
       )}
@@ -104,7 +113,8 @@ const Home = () => {
       {/* Footer */}
       <footer className="bg-dark text-white text-center p-4 mt-5">
         <p className="mb-1">
-          © {new Date().getFullYear()} Find Your Companion App. All Rights Reserved.
+          © {new Date().getFullYear()} Find Your Companion App. All Rights
+          Reserved.
         </p>
         <p className="mb-0">Made with ❤️ by Team 3</p>
       </footer>

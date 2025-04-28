@@ -47,7 +47,7 @@ const EventSignup = () => {
           },
         };
 
-        const response = await axios.post("http://127.0.0.1:5000/register", payload);
+        await axios.post("http://127.0.0.1:5000/register", payload);
         setSuccessMessage("Registration successful! Redirecting to login...");
         setTimeout(() => navigate("/login"), 2000);
       } catch (error) {
@@ -64,10 +64,16 @@ const EventSignup = () => {
       <div className="row w-75 shadow-lg p-5 rounded bg-white">
         <div className="col-md-6 d-flex flex-column justify-content-center">
           <h1 className="text-center mb-4">Register</h1>
-          <h5 className="text-center text-muted mb-4">Sign up to manage your events</h5>
+          <h5 className="text-center text-muted mb-4">
+            Sign up to join the events
+          </h5>
 
-          {successMessage && <div className="alert alert-success">{successMessage}</div>}
-          {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
+          {successMessage && (
+            <div className="alert alert-success">{successMessage}</div>
+          )}
+          {errorMessage && (
+            <div className="alert alert-danger">{errorMessage}</div>
+          )}
 
           <form
             className={`needs-validation ${validated ? "was-validated" : ""}`}
@@ -76,7 +82,9 @@ const EventSignup = () => {
           >
             {/* Basic Info */}
             <div className="mb-3">
-              <label htmlFor="firstName" className="form-label">First Name</label>
+              <label htmlFor="firstName" className="form-label">
+                First Name
+              </label>
               <input
                 type="text"
                 className="form-control"
@@ -90,7 +98,9 @@ const EventSignup = () => {
             </div>
 
             <div className="mb-3">
-              <label htmlFor="lastName" className="form-label">Last Name</label>
+              <label htmlFor="lastName" className="form-label">
+                Last Name
+              </label>
               <input
                 type="text"
                 className="form-control"
@@ -104,7 +114,9 @@ const EventSignup = () => {
             </div>
 
             <div className="mb-3">
-              <label htmlFor="email" className="form-label">Email</label>
+              <label htmlFor="email" className="form-label">
+                Email
+              </label>
               <input
                 type="email"
                 className="form-control"
@@ -114,11 +126,15 @@ const EventSignup = () => {
                 onChange={handleChange}
                 required
               />
-              <div className="invalid-feedback">Enter a valid email address.</div>
+              <div className="invalid-feedback">
+                Enter a valid email address.
+              </div>
             </div>
 
             <div className="mb-3">
-              <label htmlFor="password" className="form-label">Password</label>
+              <label htmlFor="password" className="form-label">
+                Password
+              </label>
               <input
                 type="password"
                 className="form-control"
@@ -129,12 +145,15 @@ const EventSignup = () => {
                 required
                 minLength="6"
               />
-              <div className="invalid-feedback">Password must be at least 6 characters long.</div>
+              <div className="invalid-feedback">
+                Password must be at least 6 characters long.
+              </div>
             </div>
 
-            {/* Additional Fields */}
             <div className="mb-3">
-              <label htmlFor="studentBio" className="form-label">Student Bio</label>
+              <label htmlFor="studentBio" className="form-label">
+                Student Bio
+              </label>
               <textarea
                 className="form-control"
                 id="studentBio"
@@ -147,7 +166,9 @@ const EventSignup = () => {
             </div>
 
             <div className="mb-3">
-              <label htmlFor="street" className="form-label">Street</label>
+              <label htmlFor="street" className="form-label">
+                Street
+              </label>
               <input
                 type="text"
                 className="form-control"
@@ -161,7 +182,9 @@ const EventSignup = () => {
             </div>
 
             <div className="mb-3">
-              <label htmlFor="city" className="form-label">City</label>
+              <label htmlFor="city" className="form-label">
+                City
+              </label>
               <input
                 type="text"
                 className="form-control"
@@ -175,7 +198,9 @@ const EventSignup = () => {
             </div>
 
             <div className="mb-3">
-              <label htmlFor="state" className="form-label">State</label>
+              <label htmlFor="state" className="form-label">
+                State
+              </label>
               <input
                 type="text"
                 className="form-control"
@@ -189,7 +214,9 @@ const EventSignup = () => {
             </div>
 
             <div className="mb-3">
-              <label htmlFor="zipcode" className="form-label">Zipcode</label>
+              <label htmlFor="zipcode" className="form-label">
+                Zipcode
+              </label>
               <input
                 type="text"
                 className="form-control"
@@ -205,16 +232,24 @@ const EventSignup = () => {
             {/* Buttons */}
             <div className="d-flex justify-content-between gap-2">
               <Link to="/login" className="w-50">
-                <button type="button" className="btn btn-outline-dark w-100">Back</button>
+                <button type="button" className="btn btn-outline-dark w-100">
+                  Back
+                </button>
               </Link>
-              <button type="submit" className="btn btn-dark w-50">Register</button>
+              <button type="submit" className="btn btn-dark w-50">
+                Register
+              </button>
             </div>
           </form>
         </div>
 
         {/* Image Section */}
         <div className="col-md-6 d-none d-md-block">
-          <img src={RegisterImage} alt="Register" className="img-fluid rounded" />
+          <img
+            src={RegisterImage}
+            alt="Register"
+            className="img-fluid rounded"
+          />
         </div>
       </div>
     </div>

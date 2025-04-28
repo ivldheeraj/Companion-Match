@@ -5,7 +5,6 @@ import DefaultEventImage from "../Assets/EventDefault.png";
 import { Link } from "react-router-dom";
 import { Calendar, Clock, MapPin, NotebookPen } from "lucide-react";
 import { useNavigate } from "react-router-dom"; // Import useHistory hook
-import IncomingMatchRequests from "../Matching/IncomingRequests";
 
 const ViewEvents = () => {
   const [registeredEvents, setRegisteredEvents] = useState([]);
@@ -15,7 +14,7 @@ const ViewEvents = () => {
   const [answers, setAnswers] = useState({});
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [pastEvents, setPastEvents] = useState([]);
-  const [activeTab, setActiveTab] = useState("incoming"); // Options: incoming, accepted, rejected
+  // const [activeTab, setActiveTab] = useState("incoming"); // Options: incoming, accepted, rejected
 
   const fetchEvents = () => {
     axios
@@ -89,7 +88,7 @@ const ViewEvents = () => {
         image: null,
       }));
 
-      console.log("All active events (with isRegistered):", events);
+      // const registered = events.filter((e) => e.isRegistered);
 
       const filteredEvents = events.filter(
         (event) =>
@@ -97,28 +96,25 @@ const ViewEvents = () => {
           new Date(event.date) >= today // Only include future or today's events
       );
 
-      const registered = events.filter((e) => e.isRegistered);
 
-      setRegisteredEvents(registered);
+      // setRegisteredEvents(registered);
       setNonRegisteredEvents(filteredEvents); // ✅ only future events shown
 
       console.log("Filtered non-registered events:", filteredEvents);
-      console.log("Filtered registered events:", registered);
+      // console.log("Filtered registered events:", registered);
     } catch (error) {
       console.error("Error fetching events:", error);
     }
   };
 
   useEffect(() => {
-    const studentId = localStorage.getItem("userId");
-    if (!studentId) {
-      console.error("Student ID not found in localStorage.");
-      return;
-    }
-    // Fetch registered events for the student
     fetchEvents();
+  }, []);
+  
+  useEffect(() => {
     fetchNonRegisteredEvents();
   }, []);
+  
 
   const handleRegister = async (event) => {
     if (registeredEvents.some((e) => e.id === event.id)) {
@@ -176,7 +172,7 @@ const ViewEvents = () => {
     console.log("Submitting responses:", responses);
     console.log("Student ID:", student_id);
     try {
-      const res = await axios.post(
+       await axios.post(
         "http://127.0.0.1:5000/student/register-event",
         {
           student_id,
@@ -206,79 +202,14 @@ const ViewEvents = () => {
     date.setMinutes(parseInt(minutes, 10));
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString();
-  };
+
 
   const navigate = useNavigate(); // Initialize the navigate function
-  const studentId = parseInt(localStorage.getItem("userId"));
+  // const studentId = parseInt(localStorage.getItem("userId"));
 
   return (
     <div>
-      <div>
-        <div className="mb-4">
-          <ul className="nav nav-tabs">
-            <li className="nav-item">
-              <button
-                className={`nav-link ${
-                  activeTab === "incoming" ? "active" : ""
-                }`}
-                onClick={() => setActiveTab("incoming")}
-              >
-                Incoming Requests
-              </button>
-            </li>
-            <li className="nav-item">
-              <button
-                className={`nav-link ${
-                  activeTab === "accepted" ? "active" : ""
-                }`}
-                onClick={() => setActiveTab("accepted")}
-              >
-                Accepted Matches
-              </button>
-            </li>
-            <li className="nav-item">
-              <button
-                className={`nav-link ${
-                  activeTab === "rejected" ? "active" : ""
-                }`}
-                onClick={() => setActiveTab("rejected")}
-              >
-                Rejected Matches
-              </button>
-            </li>
-          </ul>
-        </div>
-
-        {activeTab === "incoming" && (
-          <div className="p-3">
-           {/* <IncomingMatchRequests studentId={studentId} /> */}
-           <p>Check your incoming match requests here.</p>
-          <IncomingMatchRequests studentId={studentId} statusFilter={1} />
-          </div>
-
-        )}
-
-        {activeTab === "accepted" && (
-          <div className="p-3">
-            {/* <h5>Accepted Matches</h5> */}
-            <p>Accepted matches will be shown here.</p>
-
-            {/* You can make a separate component like <AcceptedMatches /> */}
-            <IncomingMatchRequests studentId={studentId} statusFilter={2} />
-          </div>
-        )}
-
-        {activeTab === "rejected" && (
-          <div className="p-3">
-            {/* <h5>Rejected Matches</h5> */}
-            {/* You can make a separate component like <RejectedMatches /> */}
-            <p>Rejected matches will be shown here.</p>
-            <IncomingMatchRequests studentId={studentId} statusFilter={3} />
-          </div>
-        )}
+      <div> 
 
         <h3 className="mb-3">Upcoming Events</h3>
         <div className="d-flex flex-wrap gap-3 mb-5">
@@ -315,8 +246,8 @@ const ViewEvents = () => {
                         <Button variant="success" disabled>
                           Registered
                         </Button>
-                        <Link to={`/Matching`}>
-                          <Button variant="info">View Matches</Button>
+                        <Link to={`/Matching/${event.id}`}>
+                          <Button variant="dark ">View </Button>
                         </Link>
                       </>
                     ) : (
@@ -326,9 +257,6 @@ const ViewEvents = () => {
                           variant="primary"
                         >
                           Register
-                        </Button>
-                        <Button variant="secondary" disabled>
-                          Unavailable
                         </Button>
                       </>
                     )}
@@ -434,7 +362,7 @@ const ViewEvents = () => {
               if (allAnswered) {
                 submitAnswers();
                 // Use navigate to navigate programmatically
-                navigate("/Matching");
+                navigate(`/Matching/${selectedEvent.id}`);
               } else {
                 alert("Please answer all questions before submitting.");
               }

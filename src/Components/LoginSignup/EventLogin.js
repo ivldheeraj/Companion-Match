@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link, useNavigate } from "react-router-dom";
-import LoginImage from "../Assets/Login.png"; // Ensure the correct path
+import LoginImage from "../Assets/Login.png"; 
 import "./../Assets/Login.css";
 import axios from "axios";
 
@@ -9,6 +9,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState("");
 
   // Redirect if user is already logged in
   useEffect(() => {
@@ -19,31 +20,34 @@ const Login = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
+
     try {
       const response = await axios.post("http://127.0.0.1:5000/login", {
         email,
         password,
       });
-  
+
       if (response.status === 200 && response.data) {
         const { user_id, user_type } = response.data;
-  
+
         localStorage.setItem("userEmail", email);
         localStorage.setItem("userId", user_id);
         localStorage.setItem("userType", user_type); // Store user type
-        localStorage.setItem("isAdmin", user_type === "admin" ? "true" : "false");
-  
+        localStorage.setItem(
+          "isAdmin",
+          user_type === "admin" ? "true" : "false"
+        );
+
+        setErrorMessage(""); // clear any previous errors
         navigate("/"); // Redirect to home
       } else {
-        alert("Invalid credentials or server error.");
+        setErrorMessage("Invalid credentials or server error.");
       }
     } catch (error) {
       console.error("Login error:", error);
-      alert("Login failed. Please check your credentials or try again later.");
+      setErrorMessage("Login failed. Please check your credentials.");
     }
   };
-  
 
   return (
     <div className="container vh-100 d-flex align-items-center justify-content-center">
@@ -51,8 +55,14 @@ const Login = () => {
         {/* Left Side (Login Form) */}
         <div className="col-md-6 d-flex flex-column justify-content-center">
           <h2 className="text-center display-6 mb-4">
-            Welcome to Find Your Companion 
+            Welcome to Find Your Companion
           </h2>
+          {errorMessage && (
+            <div className="alert alert-danger text-center" role="alert">
+              {errorMessage}
+            </div>
+          )}
+
           <form className="needs-validation" noValidate onSubmit={handleSubmit}>
             <div className="mb-3">
               <label htmlFor="email" className="form-label">
@@ -100,11 +110,6 @@ const Login = () => {
                 Login
               </button>
             </div>
-
-            {/* Signup Link */}
-            {/* <p className="text-center mt-3">
-              Don't have an account? <Link to="/signup">Create one</Link>
-            </p> */}
           </form>
         </div>
 

@@ -5,7 +5,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import DefaultEventImage from "../Assets/EventDefault.png";
 
 const AdminAddEvent = ({ userEmail }) => {
-  // eventData now includes id and questionnaire_id
   const [eventData, setEventData] = useState({
     id: null, // will be set once created or when editing
     name: "",
@@ -14,7 +13,7 @@ const AdminAddEvent = ({ userEmail }) => {
     date: "",
     time: "",
     image: null,
-    questionnaire_id: "", // new field for event category
+    questionnaire_id: "",
   });
 
   const [events, setEvents] = useState([]);
@@ -46,14 +45,6 @@ const AdminAddEvent = ({ userEmail }) => {
     setEventData({ ...eventData, [e.target.name]: e.target.value });
   };
 
-  // const handleImageUpload = (e) => {
-  //   const file = e.target.files[0];
-  //   if (file) {
-  //     const imageUrl = URL.createObjectURL(file);
-  //     setEventData({ ...eventData, image: imageUrl });
-  //   }
-  // };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -76,7 +67,6 @@ const AdminAddEvent = ({ userEmail }) => {
       event_location: eventData.venue,
       questionnaire_id: parseInt(eventData.questionnaire_id, 10), // Ensure this is an integer
       admin_id: parseInt(adminId),
-      // status_active_yn: eventData.status_active_yn ?? 1
     };
 
     console.log("Payload being sent:", payload); // Debugging
@@ -106,8 +96,6 @@ const AdminAddEvent = ({ userEmail }) => {
       }
       resetForm();
       fetchEvents();
-      // window.location.reload(); // This will refresh the page
-      // Close the collapsible form after submission
       const formCollapse = document.getElementById("createEventForm");
       if (formCollapse && formCollapse.classList.contains("show")) {
         formCollapse.classList.remove("show");
@@ -144,6 +132,7 @@ const AdminAddEvent = ({ userEmail }) => {
 
   const handleDelete = async (index) => {
     const eventToDelete = events[index];
+    console.log("Deleting event:", eventToDelete.id);
     if (!eventToDelete.id) {
       alert("Event ID not found.");
       return;
@@ -242,20 +231,6 @@ const AdminAddEvent = ({ userEmail }) => {
               <option value="5">Other Common Events</option>
             </Form.Select>
           </Form.Group>
-
-          {/* Uncomment if image uploading is desired */}
-          {/* <Form.Group className="mb-3">
-            <Form.Label>Upload Image</Form.Label>
-            <Form.Control type="file" accept="image/*" onChange={handleImageUpload} />
-          </Form.Group>
-          {eventData.image && (
-            <img
-              src={eventData.image}
-              alt="Event"
-              className="img-fluid mt-2"
-              style={{ maxHeight: "200px" }}
-            />
-          )} */}
 
           <Button variant="success" type="submit" className="w-100 mt-3">
             {editingIndex !== null ? "Update Event" : "Add Event"}

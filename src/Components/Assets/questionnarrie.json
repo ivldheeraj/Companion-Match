@@ -1,0 +1,34 @@
+{
+    "QuestionnaireID": 1,
+    "QuestionnaireTitle": "sample questionnaire",
+    "QuestionsAndOptions": [
+      {
+        "QuestionID": 1,
+        "Question": "What is your name?",
+        "Options": [
+          {
+            "OptionID": 1,
+            "Option": "Bhargava"
+          },
+          {
+            "OptionID": 2,
+            "Option": "Dheeraj"
+          }
+        ]
+      },
+      {
+        "QuestionID": 2,
+        "Question": "What is your Gender?",
+        "Options": [
+          {
+            "OptionID": 1,
+            "Option": "Male"
+          },
+          {
+            "OptionID": 2,
+            "Option": "Female"
+          }
+        ]
+      }
+    ]
+  }
